@@ -1,7 +1,6 @@
 package teamport.aether.blocks;
 
 import net.minecraft.core.block.Block;
-import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.entity.player.Player;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class BlockLogicLocked extends BlockLogic {
+public class BlockLogicLocked extends BlockLogicDungeon {
 
     public final Block<?> replacement;
 

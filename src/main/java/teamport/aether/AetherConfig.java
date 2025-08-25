@@ -107,6 +107,7 @@ public class AetherConfig {
     }
 
 
+    @SuppressWarnings("unchecked")
     static <T> T cfgGetValueOrDefault(String key, T def) {
         T res = null;
         try {
@@ -120,10 +121,20 @@ public class AetherConfig {
                 res = (T) new Long(cfg.getLong(key));
             }
             else if (def instanceof Float) {
-                res = (T) new Float(cfg.getDouble(key));
+                Object raw = cfg.getRawParsed().get(key);
+                if (raw instanceof Double) {
+                    res = (T) new Float(((Double) raw));
+                    return res;
+                }
+                res = (T) new Float((float) raw);
             }
             else if (def instanceof Double) {
-                res = (T) new Double(cfg.getDouble(key));
+                Object raw = cfg.getRawParsed().get(key);
+                if (raw instanceof Float) {
+                    res = (T) new Double(((float) raw));
+                    return res;
+                }
+                res = (T) new Double((double) raw);
             }
             else if (def instanceof Boolean) {
                 res = (T) new Boolean(cfg.getBoolean(key));
@@ -134,6 +145,11 @@ public class AetherConfig {
 
         } catch (NullPointerException ignored) {}
 
-        return res == null ? def : res;
+        if (res == null) {
+            LOGGER.warn("Failed to load \"{}\"! Assuming default...", key);
+            return def;
+        }
+
+        return res;
     }
 }
